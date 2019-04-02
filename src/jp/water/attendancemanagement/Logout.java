@@ -12,16 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class OkLogin
+ * Servlet implementation class Logout
  */
-@WebServlet("/OkLogin")
-public class OkLogin extends HttpServlet {
+@WebServlet("/Logout")
+public class Logout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public OkLogin() {
+    public Logout() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,12 +34,8 @@ public class OkLogin extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		
-		boolean login = false;
-		if (session.getAttribute("login") != null) {
-			login = (boolean)session.getAttribute("login");
-		}
-		
-		String displayUserName = (String)session.getAttribute("displayUserName");
+		// sessionの破棄
+		session.invalidate();
 		
 		// cacheをクリアする
 		response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
@@ -52,16 +48,7 @@ public class OkLogin extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println("<html><body>");
-		
-		if (login) {
-			out.println("■ログインに成功しました。");
-			out.println("<br><br>");
-			out.println("接続ユーザー：" + displayUserName);
-			
-		} else {
-			out.println("■ログインしていません。");
-		}
-		
+		out.println("■ログアウトしました。");
 		out.println("</body></html>");
 		out.close();
 	}
