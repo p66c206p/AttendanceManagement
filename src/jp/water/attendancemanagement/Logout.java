@@ -49,6 +49,8 @@ public class Logout extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.println("<html><body>");
 		out.println("■ログアウトしました。");
+		out.println("<hr>");
+		out.println("<a href=\"login.html\">【ログイン】</a>");
 		out.println("</body></html>");
 		out.close();
 	}

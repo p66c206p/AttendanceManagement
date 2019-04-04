@@ -38,6 +38,7 @@ public class OkLogin extends HttpServlet {
 		if (session.getAttribute("login") != null) {
 			login = (boolean)session.getAttribute("login");
 		}
+		if (!login) response.sendRedirect("login.html");
 		
 		String displayUserName = (String)session.getAttribute("displayUserName");
 		
@@ -52,15 +53,19 @@ public class OkLogin extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println("<html><body>");
-		
-		if (login) {
-			out.println("■ログインに成功しました。");
-			out.println("<br><br>");
-			out.println("接続ユーザー：" + displayUserName);
-			
-		} else {
-			out.println("■ログインしていません。");
-		}
+		out.println("Login: <b>" + displayUserName + "</b>");
+		out.println("<hr>");
+		out.println("<a href=\"Logout\">【ログアウト】</a>");
+		out.println("<hr>");
+		out.println("（現在の時間）");
+
+		out.println("<form action=\"AddClockIn\" method=\"POST\">");
+		out.println("<input type=\"submit\" value=\"出勤\">");
+		out.println("</form>");
+		out.println("　");
+		out.println("<form action=\"AddClockOut\" method=\"POST\">");
+		out.println("<input type=\"submit\" value=\"退勤\">");
+		out.println("</form>");
 		
 		out.println("</body></html>");
 		out.close();

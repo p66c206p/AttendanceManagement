@@ -76,7 +76,7 @@ public class CheckLogin extends HttpServlet {
 			
 			ResultSet resultSet = statement.executeQuery(sql);
 			
-			while(resultSet.next()) {
+			while (resultSet.next()) {
 				displayUserName = resultSet.getString("user_name");
 				login = true;
 			}
