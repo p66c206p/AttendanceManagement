@@ -5,29 +5,24 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class AddClockOut
+ * Servlet implementation class AddMember
  */
-@WebServlet("/AddClockOut")
-public class AddClockOut extends HttpServlet {
+@WebServlet("/AddMember")
+public class AddMember extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddClockOut() {
+    public AddMember() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -45,26 +40,15 @@ public class AddClockOut extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		HttpSession session = request.getSession();
+		request.setCharacterEncoding("UTF-8");
 		
-		boolean login = false;
-		if (session.getAttribute("login") != null) {
-			login = (boolean)session.getAttribute("login");
-		}
+		String userName = request.getParameter("uname");
+		String userPassword = request.getParameter("upass");
 		
-		String displayUserName = (String)session.getAttribute("displayUserName");
-		
-		ZonedDateTime nowZonedDt = ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
-		String strNowTime = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm").format(nowZonedDt);
-		String timeClockOut = strNowTime;
-		
-		response.setContentType("text/html; charset=UTF-8");
-		
-		// SQL文の作成
-		String sql = "UPDATE attendance_tb" +
-				" SET time_clock_out = '" + timeClockOut + "'" +
-				" WHERE user_name = '" + displayUserName + "'" +
-				" AND time_clock_out IS NULL";
+		String sql = "INSERT INTO user_tb" +
+				"(user_name,login_password)" +
+				"VALUES" +
+				"('" + userName + "','" + userPassword + "')";
 		
 		// databaseのログイン情報
 		String database = "jdbc:mysql://localhost/sample_db" +
@@ -74,7 +58,7 @@ public class AddClockOut extends HttpServlet {
 		
 		Connection connection = null;
 		Statement statement = null;
-		String outMessage = "";
+		String outMessage;
 		
 		// 1接続処理
 		try {
@@ -82,14 +66,8 @@ public class AddClockOut extends HttpServlet {
 			connection = DriverManager.getConnection(database, user, password);
 			statement = connection.createStatement();
 			
-			if (login) {
-				int result = statement.executeUpdate(sql);
-				if (result > 0) {
-					outMessage = "■退勤を登録しました。";
-				} else {
-					outMessage = "■退勤できる出勤データがありません。";
-				}
-			}
+			statement.executeUpdate(sql);
+			outMessage = "■新規ユーザー：" + userName + "を登録しました。";
 		} catch (Exception e) {
 			outMessage = "■登録に失敗しました。";
 		}
@@ -102,25 +80,15 @@ public class AddClockOut extends HttpServlet {
 			outMessage = "■データベースの切断に失敗しました。";
 		}
 		
-		if (!login) response.sendRedirect("login.html");
-		
-		// cacheをクリアする
-		response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-		response.addHeader("Cache-Control", "post-check=0, pre-check=0");
-		response.setHeader("Pragma", "no-cache");
-		response.setDateHeader("Expires", 0);
-		Date today = new Date();
-		response.setDateHeader("Last-Modified", today.getTime());
-		
 		response.setContentType("text/html; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println("<html><body>");
-		out.println("Login: <b>" + displayUserName + "</b>");
 		out.println("<hr>");
-		out.println("<a href=\"OkLogin\">【戻る】</a>");
+		out.println("<a href=\"login.html\">【戻る】</a>");
 		out.println("<hr>");
 		out.println(outMessage);		
 		out.println("</body></html>");
 		out.close();
 	}
+
 }

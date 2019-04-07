@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -54,14 +55,16 @@ public class AddClockIn extends HttpServlet {
 		
 		String displayUserName = (String)session.getAttribute("displayUserName");
 		
-        ZonedDateTime nowZonedDt = ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
-        String strNowTime = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm").format(nowZonedDt);
+		ZonedDateTime nowZonedDt = ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
+		String strNowTime = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm").format(nowZonedDt);
 		String timeClockIn = strNowTime;
 		
 		response.setContentType("text/html; charset=UTF-8");
 		
-		// INSERT文の作成
-		String sql = "INSERT INTO attendance_tb" +
+		String sql1 = "SELECT * FROM attendance_tb" +
+				" WHERE user_name = '" + displayUserName + "'" +
+				" AND time_clock_out IS NULL";
+		String sql2 = "INSERT INTO attendance_tb" +
 				"(user_name,time_clock_in)" +
 				"VALUES" +
 				"('" + displayUserName + "','" + timeClockIn + "')";
@@ -82,8 +85,11 @@ public class AddClockIn extends HttpServlet {
 			connection = DriverManager.getConnection(database, user, password);
 			statement = connection.createStatement();
 			
-			if (login) {
-				statement.executeUpdate(sql);
+			ResultSet resultSet = statement.executeQuery(sql1);
+			if (resultSet.next()) {
+				outMessage = "未退勤のデータがある為、先に退勤を切ってください。";
+			} else if (login) {
+				statement.executeUpdate(sql2);
 				outMessage = "■出勤を登録しました。";
 			}
 		} catch (Exception e) {
@@ -113,7 +119,7 @@ public class AddClockIn extends HttpServlet {
 		out.println("<html><body>");
 		out.println("Login: <b>" + displayUserName + "</b>");
 		out.println("<hr>");
-		out.println("<a href=\"Logout\">【ログアウト】</a>");
+		out.println("<a href=\"OkLogin\">【戻る】</a>");
 		out.println("<hr>");
 		out.println(outMessage);		
 		out.println("</body></html>");

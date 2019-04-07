@@ -48,10 +48,6 @@ public class CheckLogin extends HttpServlet {
 		String userName = request.getParameter("uname");
 		String userPassword = request.getParameter("upass");
 		
-		log(userName);
-		log(userPassword);
-		
-		// SQLï∂ÇÃçÏê¨
 		String sql = "SELECT user_name FROM user_tb" +
 				" WHERE user_name = '" + userName + "'" +
 				" AND login_password = '" + userPassword + "'";
