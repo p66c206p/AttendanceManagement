@@ -57,15 +57,18 @@ public class OkLogin extends HttpServlet {
 		out.println("<hr>");
 		out.println("<a href=\"Logout\">【ログアウト】</a>");
 		out.println("<hr>");
-		out.println("（現在の時間）");
+		out.println("<p id=\"RealtimeClockArea\"></p>");
 
+		out.println("<div style=\"display:inline-flex\">");
 		out.println("<form action=\"AddClockIn\" method=\"POST\">");
 		out.println("<input type=\"submit\" value=\"出勤\">");
 		out.println("</form>");
-		out.println("　");
 		out.println("<form action=\"AddClockOut\" method=\"POST\">");
 		out.println("<input type=\"submit\" value=\"退勤\">");
 		out.println("</form>");
+		out.println("</div>");
+		
+		out.println("<script src=\"clock.js\"></script>");
 		
 		out.println("</body></html>");
 		out.close();

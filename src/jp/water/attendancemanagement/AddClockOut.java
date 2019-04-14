@@ -117,7 +117,7 @@ public class AddClockOut extends HttpServlet {
 		out.println("<html><body>");
 		out.println("Login: <b>" + displayUserName + "</b>");
 		out.println("<hr>");
-		out.println("<a href=\"OkLogin\">y–ß‚éz</a>");
+		out.println("<a href=\"Logout\">yƒƒOƒAƒEƒgz</a>");
 		out.println("<hr>");
 		out.println(outMessage);		
 		out.println("</body></html>");
