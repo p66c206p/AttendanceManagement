@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>従業員の削除</title>
+<script src="checkSubmit.js"></script>
 </head>
 <body>
 ■削除するユーザー名とパスワードを入力してください。
@@ -19,7 +20,7 @@
 <input type="password" name="upass" size="30">
 <br>
 <br>
-<input type="submit" value="削除">
+<input type="submit" value="削除" onClick="return checkSubmit(this)">
 </form>
 </body>
 </html>
